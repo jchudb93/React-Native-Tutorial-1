@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import list from './list.js'
 import {Grid, Row, FormGroup} from 'react-bootstrap'
 
@@ -8,31 +8,64 @@ function isSearched(searchTerm) {
     return !searchTerm || item.title.includes(searchTerm);
   }
 }
+
+const DEFAULT_QUERY = 'React';
+const PATH_BASE = 'http://hn.algolia.com/api/v1';
+const PATH_SEARCH = '/search';
+const PARAM_SEARCH = 'query=';
+
+//const url = PATH_BASE + PATH_SEARCH + '?' + PARAM_SEARCH + DEFAULT_QUERY
+
+const url =  `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${DEFAULT_QUERY}`
+
+console.log(url);
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: list
+      result: null,
+      searchTerm : DEFAULT_QUERY
     }
     //bind the method*
     this.removeItem = this.removeItem.bind(this);
     this.searchValue = this.searchValue.bind(this);
+    this.setTopStories = this.setTopStories.bind(this);
+    this.fetchTopStories = this.fetchTopStories.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+  }
+  // set top setTopStories
+  setTopStories(result){
+    this.setState({result: result});
+  }
+  //fetch
+  fetchTopStories(searchTerm){
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${DEFAULT_QUERY}`)
+      .then(response => response.json())
+      .then(result => this.setTopStories(result))
+      .catch(e=>e);
   }
 
+  componentDidMount(){
+    this.fetchTopStories(this.state.searchTerm);
+  }
   removeItem(id) {
     //const isNotId = item => item.objectID !== id;
-    const updatedList = this.state.list.filter(item => item.objectID !== id);
-    this.setState({list: updatedList});
+    const {result} = this.state;
+    const updatedList = this.state.result.hits.filter(item => item.objectID !== id);
+    this.setState({result: {...result, hits: updatedList}});
   }
 
   searchValue(event) {
     this.setState({searchTerm: event.target.value})
   }
   render() {
-    const {list, searchTerm} = this.state;
+    const {result, searchTerm} = this.state;
+
+    if(!result) {return null;}
     return (<div className="App">
 
-      <Grid fluid="fluid">
+      <Grid fluid>
         <Row>
           <div className="jumbotron text-center">
             <Search onChange={this.searchValue} value={searchTerm}>
@@ -42,7 +75,7 @@ class App extends Component {
         </Row>
 
       </Grid>
-      <Table list={list} searchTerm={searchTerm} removeItem={this.removeItem}/>
+      <Table list={result.hits} searchTerm={searchTerm} removeItem={this.removeItem}/>
     </div>);
   }
 }
