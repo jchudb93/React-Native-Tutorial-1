@@ -12,6 +12,7 @@ import {
   View
 } from 'react-native';
 
+import SimpleButton from './App/Components/SimpleButton'
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
     'Cmd+D or shake for dev menu',
@@ -32,6 +33,8 @@ export default class App extends Component<{}> {
         <Text style={styles.instructions}>
           {instructions}
         </Text>
+        <SimpleButton/>
+          {SimpleButton}
       </View>
     );
   }
