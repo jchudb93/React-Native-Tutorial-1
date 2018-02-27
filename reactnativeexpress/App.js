@@ -1,11 +1,40 @@
 import React, { Component } from 'react'
 import { AppRegistry, View, Text, StyleSheet } from 'react-native'
+import Toggle from './Toggle'
 
 export default class App extends Component{
+
+  state = {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
   render(){
     return(
       <View style={styles.container}>
-        <View style={styles.box}/>
+        <Toggle
+          label={'Primary axis (flexDirection)'}
+          value={flexDirection}
+          options={['row', 'column']}
+          onChange={(option) => this.setState({flexDirection: option})}
+        />
+        <Toggle
+        label={primaryAxis + ' distribution (justifyContent)'}
+          value={justifyContent}
+        options={['flex-start', 'center', 'flex-end', 'space-around', 'space-between']}
+        onChange={(option) => this.setState({justifyContent: option})}
+      />
+      <Toggle
+        label={secondaryAxis + ' alignment (alignItems)'}
+        value={alignItems}
+        options={['flex-start', 'center', 'flex-end', 'stretch']}
+        onChange={(option) => this.setState({alignItems: option})}
+      />
+      <View style={[styles.layout, layoutStyle]}>
+        <View style={styles.box} />
+        <View style={styles.box} />
+        <View style={styles.box} />
+      </View>
       </View>
     )
   }
@@ -13,17 +42,17 @@ export default class App extends Component{
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1
   },
+  layout: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  }
+
   box: {
-    width: 200,
-    height: 200,
-    backgroundColor: 'skyblue',
-    borderWidth: 2,
-    borderColor: 'steelblue',
-    borderRadius: 20,
+    padding: 25,
+    backgroundColor: 'steelblue',
+    margin: 5,
   }
 })
 
