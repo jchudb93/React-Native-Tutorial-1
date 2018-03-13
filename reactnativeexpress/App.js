@@ -1,65 +1,43 @@
 import React, { Component } from 'react'
-import { AppRegistry, View, StyleSheet } from 'react-native'
+import { AppRegistry, View, StyleSheet, FlatList, Text } from 'react-native'
 
 import Toggle from './Toggle'
 
+const rows = [
+  {id: 0, text: 'View'},
+  {id: 1, text: 'Text'},
+  {id: 2, text: 'Image'},
+  {id: 3, text: 'ScrollView'},
+  {id: 4, text: 'ListView'},
+]
+
+const extractKey = ({id}) => id
+
 class App extends Component {
 
-  state = {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+  renderItem = ({item}) => {
+    return (
+      <Text style={styles.row}>
+        {item.text}
+      </Text>
+    )
   }
 
   render() {
-    const {flexDirection, alignItems, justifyContent} = this.state
-    const layoutStyle = {flexDirection, justifyContent, alignItems}
-
-    const primaryAxis = flexDirection === 'row' ? 'Horizontal' : 'Vertical'
-    const secondaryAxis = flexDirection === 'row' ? 'Vertical' : 'Horizontal'
-
-    return (
-      <View style={styles.container}>
-        <Toggle
-          label={'Primary axis (flexDirection)'}
-          value={flexDirection}
-          options={['row', 'column']}
-          onChange={(option) => this.setState({flexDirection: option})}
-        />
-        <Toggle
-          label={primaryAxis + ' distribution (justifyContent)'}
-            value={justifyContent}
-          options={['flex-start', 'center', 'flex-end', 'space-around', 'space-between']}
-          onChange={(option) => this.setState({justifyContent: option})}
-        />
-        <Toggle
-          label={secondaryAxis + ' alignment (alignItems)'}
-          value={alignItems}
-          options={['flex-start', 'center', 'flex-end', 'stretch']}
-          onChange={(option) => this.setState({alignItems: option})}
-        />
-        <View style={[styles.layout, layoutStyle]}>
-          <View style={styles.box} />
-          <View style={styles.box} />
-          <View style={styles.box} />
-        </View>
-      </View>
-    )
+    return(
+      <FlatList style={styles.container} data={rows} renderItem={this.renderItem} keyExtractor={extractKey}/>
+    );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
+    marginTop: 20,
     flex: 1,
   },
-  layout: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.05)',
-  },
-  box: {
-    padding: 25,
-    backgroundColor: 'steelblue',
-    margin: 5,
+  row: {
+    padding: 15,
+    marginBottom: 5,
+    backgroundColor: 'skyblue',
   },
 })
 
