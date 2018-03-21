@@ -11,14 +11,30 @@ import {
   Text,
   View
 } from 'react-native';
+import {
+  StackNavigator,
+} from 'react-navigation';
 
-export default class App extends Component {
+const App = StackNavigator({
+  Home: { screen: HomeScreen },
+  Profile: { screen: ProfileScreen },
+});
+
+export default class HomeScreen extends Component {
+  static navigationOptions = {
+    title: 'Welcome',
+  };
   render() {
-    return
-      <Text style={styles.description}>
-        Search for houses (Again)
-      </Text>
-  }
+    const { navigate } = this.props.navigation;
+    return (
+      <Button
+        title="Go to Jane's profile"
+        onPress={() =>
+          navigate('Profile', { name: 'Jane' })
+        }
+      />
+    );
+  } 
 }
 
 const styles = StyleSheet.create({
