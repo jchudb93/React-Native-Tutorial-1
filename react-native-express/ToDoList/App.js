@@ -1,34 +1,31 @@
 import React, { Component } from 'react'
 import { AppRegistry, View } from 'react-native'
+import { connect } from 'react-redux'
 
+import { actionCreators } from './todoListRedux'
 import List from './List'
 import Input from './Input'
 import Title from './Title'
 
+const mapStateToProps = (state) => ({
+  todos: state.todos,
+})
 export default class ToDoList extends Component {
 
-  state = {
-    todos: ['Click to remove', 'Learn React Native', 'Write Code', 'Ship App'],
-  }
-
   onAddTodo = (text) => {
-    const {todos} = this.state
+    const {dispatch} = this.props
 
-    this.setState({
-      todos: [text, ...todos],
-    })
+    dispatch(actionCreators.add(text))
   }
 
   onRemoveTodo = (index) => {
-    const {todos} = this.state
+    const {dispatch} = this.props
 
-    this.setState({
-      todos: todos.filter((todo, i) => i !== index),
-    })
+    dispatch(actionCreators.remove(index))
   }
 
   render() {
-    const {todos} = this.state
+    const {todos} = this.props
 
     return (
       <View>
@@ -47,3 +44,5 @@ export default class ToDoList extends Component {
     )
   }
 }
+
+export default connect(mapStateToProps)(ToDoList)
